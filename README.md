@@ -1,3 +1,7 @@
+# Sleepfun notes
+Make sure when downloading payload to populate user's age.
+
+
 # Vana Data Refinement Template
 
 This repository serves as a template for creating Dockerized data refinement tasks that transform raw user data into normalized (and potentially anonymized) SQLite-compatible databases. Once created, it's designed to be stored in Vana's Data Registry, and indexed for querying by Vana's Query Engine.
