@@ -26,7 +26,7 @@ class Refiner:
                     input_data = json.load(f)
 
                     # Transform account data
-                    transformer = UserTransformer(self.db_path)
+                    transformer = SleepTransformer(self.db_path)
                     transformer.process(input_data)
                     logging.info(f"Transformed {input_filename}")
                     
