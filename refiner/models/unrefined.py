@@ -35,11 +35,16 @@ class OtherSleepData(BaseModel):
     duration_in_bed_seconds: Optional[float] = None
 
 
+class HypnogramSample(BaseModel):
+    level: int
+    timestamp: datetime
+
+
 class SleepDurationsData(BaseModel):
     awake: AwakeData
     asleep: AsleepData
     sleep_efficiency: Optional[float] = None
-    hypnogram_samples: List[float] = []
+    hypnogram_samples: List[HypnogramSample] = []
     other: OtherSleepData
 
 
@@ -67,9 +72,21 @@ class HeartRateSummary(BaseModel):
     min_hr_bpm: Optional[float] = None
 
 
+class HeartRateSample(BaseModel):
+    bpm: float
+    timer_duration_seconds: Optional[float] = None
+    timestamp: datetime
+    context: int
+
+
+class HeartRateVariabilitySample(BaseModel):
+    timestamp: datetime
+    hrv_rmssd: float
+
+
 class HeartRateDetailed(BaseModel):
-    hr_samples: List[float] = []
-    hrv_samples_rmssd: List[float] = []
+    hr_samples: List[HeartRateSample] = []
+    hrv_samples_rmssd: List[HeartRateVariabilitySample] = []
     hrv_samples_sdnn: List[float] = []
 
 
@@ -82,23 +99,39 @@ class Scores(BaseModel):
     sleep: Optional[float] = None
 
 
+class OxygenSaturationSample(BaseModel):
+    timestamp: datetime
+    type: int
+    percentage: int
+
+
 class OxygenSaturationData(BaseModel):
-    samples: List[float] = []
+    samples: List[OxygenSaturationSample] = []
     end_time: Optional[datetime] = None
     avg_saturation_percentage: Optional[float] = None
     start_time: Optional[datetime] = None
 
 
+class SnoringSample(BaseModel):
+    timestamp: datetime
+    duration_seconds: float
+
+
 class SnoringData(BaseModel):
-    samples: List[float] = []
+    samples: List[SnoringSample] = []
     end_time: Optional[datetime] = None
     num_snoring_events: Optional[int] = None
     total_snoring_duration_seconds: Optional[float] = None
     start_time: Optional[datetime] = None
 
 
+class BreathSample(BaseModel):
+    timestamp: datetime
+    breaths_per_min: float
+
+
 class BreathsData(BaseModel):
-    samples: List[float] = []
+    samples: List[BreathSample] = []
     end_time: Optional[datetime] = None
     max_breaths_per_min: Optional[float] = None
     on_demand_reading: Optional[bool] = None
@@ -137,6 +170,7 @@ class User(BaseModel):
 
 
 class SleepData(BaseModel):
+    id: str
     temperature_data: TemperatureData
     readiness_data: ReadinessData
     sleep_durations_data: SleepDurationsData

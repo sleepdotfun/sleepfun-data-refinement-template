@@ -46,7 +46,7 @@ class SleepTransformer(DataTransformer):
         
         # Create sleep record
         sleep_record = SleepRefined(
-            sleep_id=unrefined_data.metadata.summary_id,
+            sleep_id=unrefined_data.id,
             user_id=user.user_id,
             sleep_score=unrefined_data.data_enrichment.sleep_score
         )
