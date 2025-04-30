@@ -22,7 +22,7 @@ OUTPUT_DIR = "./download-sleep-data/output"
 
 # If limit is set, only download the X latest payload.
 # if 0, download ALL payloads
-LIMIT = 10
+LIMIT = 0
 
 class Settings(BaseSettings):
     """Global settings configuration using environment variables"""
@@ -68,13 +68,34 @@ async def download_sleep_payload(payload_id: str, output_path: Path) -> bool:
 async def get_all_payload_ids() -> list[str]:
     """Get a list of all sleep payload IDs from the terra_data_payloads table."""
     try:
-        query = supabase.table('terra_data_payloads').select('payload_id').eq('data_type', 'sleep').order('created_at', desc=True)
-        if LIMIT > 0:
-            query = query.limit(LIMIT)
-        response = query.execute()
-        if response and response.data:
-            return [item['payload_id'] for item in response.data]
-        return []
+        all_payload_ids = []
+        page_size = 1000  # Supabase has a default limit of 1000 records per query
+        offset = 0
+        
+        while True:
+            query = supabase.table('terra_data_payloads').select('payload_id').eq('data_type', 'sleep').order('created_at', desc=True).range(offset, offset + page_size - 1)
+            if LIMIT > 0 and offset + page_size > LIMIT:
+                # If we're about to exceed the user-defined limit, adjust the page size
+                query = query.limit(LIMIT - offset)
+            
+            response = query.execute()
+            
+            if not response or not response.data or len(response.data) == 0:
+                break
+                
+            all_payload_ids.extend([item['payload_id'] for item in response.data])
+            
+            # If we've reached the user-defined limit or received fewer records than page_size, we're done
+            if (LIMIT > 0 and len(all_payload_ids) >= LIMIT) or len(response.data) < page_size:
+                break
+                
+            offset += page_size
+            
+            # If we have a user-defined limit, make sure we don't fetch more than needed
+            if LIMIT > 0 and offset >= LIMIT:
+                break
+                
+        return all_payload_ids
     except Exception as e:
         logging.error(f"Error getting payload IDs from database: {e}")
         return []
