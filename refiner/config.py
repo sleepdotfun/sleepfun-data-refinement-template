@@ -20,16 +20,6 @@ class Settings(BaseSettings):
         description="Key to symmetrically encrypt the refinement. This is derived from the original file encryption key"
     )
     
-    PINATA_API_KEY: Optional[str] = Field(
-        default=None,
-        description="Pinata API key"
-    )
-    
-    PINATA_API_SECRET: Optional[str] = Field(
-        default=None,
-        description="Pinata API secret"
-    )
-    
     SCHEMA_NAME: str = Field(
         default="Sleep Data",
         description="Name of the schema"
@@ -48,6 +38,17 @@ class Settings(BaseSettings):
     SCHEMA_DIALECT: str = Field(
         default="sqlite",
         description="Dialect of the schema"
+    )
+    
+    # Optional, required if using https://pinata.cloud (IPFS pinning service)
+    PINATA_API_KEY: Optional[str] = Field(
+        default=None,
+        description="Pinata API key"
+    )
+    
+    PINATA_API_SECRET: Optional[str] = Field(
+        default=None,
+        description="Pinata API secret"
     )
     
     class Config:
