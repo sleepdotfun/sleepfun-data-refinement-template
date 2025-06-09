@@ -50,6 +50,11 @@ class Settings(BaseSettings):
         default=None,
         description="Pinata API secret"
     )
+
+    IPFS_GATEWAY_URL: str = Field(
+        default="https://gateway.pinata.cloud/ipfs",
+        description="IPFS gateway URL for accessing uploaded files. Recommended to use own dedicated gateway to avoid congestion and rate limiting. Example: 'https://ipfs.my-dao.org/ipfs' (Note: won't work for third-party files)"
+    )
     
     class Config:
         env_file = ".env"
